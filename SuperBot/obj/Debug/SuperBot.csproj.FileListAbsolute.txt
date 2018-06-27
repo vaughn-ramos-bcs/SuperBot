@@ -115,3 +115,4 @@ C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csproj
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csproj.CopyComplete
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.dll
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.pdb
+C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\AdaptiveCards.dll
