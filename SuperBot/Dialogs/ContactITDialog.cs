@@ -20,7 +20,7 @@ namespace SuperBot.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
            SharepointService.SharepointConnector(WebConfigurationManager.AppSettings["Uri"]);
-            await context.PostAsync("try");
+            //await context.PostAsync("try");
         }
     }
 }
