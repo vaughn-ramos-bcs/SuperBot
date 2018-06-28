@@ -50,9 +50,9 @@ namespace SuperBot.Dialogs
                     #endregion
 
                     if (message.Contains("onboard me"))
-                    {
                         await context.Forward(new OnboardMeDialog(), ResumeAfterModuleDialog, message, CancellationToken.None);
-                    }
+                    else if (message.Contains("contact it"))
+                        await context.Forward(new ContactITDialog(), ResumeAfterModuleDialog, message, CancellationToken.None);
                     else if(message.Contains("restart") || message.Contains("stop") || message.Contains("go back") || message.Contains("options"))
                     {
                         var compose = context.MakeMessage();

@@ -47,7 +47,6 @@ namespace SuperBot.Dialogs
             //   await context.Forward(new RootDialog(), ExpAsync, message, CancellationToken.None);
             //}
             #endregion
-            
             PromptDialog.Confirm(context, ConfirmAsync, "Are you deployed to a project?");
         }
 
