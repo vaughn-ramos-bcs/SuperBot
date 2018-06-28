@@ -1,9 +1,12 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using SuperBot.Cards;
+using SuperBot.Cards.OnboardMe;
 
 namespace SuperBot
 {
@@ -36,11 +39,40 @@ namespace SuperBot
                 // Implement user deletion here
                 // If we handle user deletion, return a real message
             }
-            else if (messageType == ActivityTypes.ConversationUpdate)
+            else if (message.GetActivityType() == ActivityTypes.ConversationUpdate)
             {
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
+                IConversationUpdateActivity iConversationUpdated = message as IConversationUpdateActivity;
+                if (iConversationUpdated != null)
+                {
+                    ConnectorClient connector = new ConnectorClient(new System.Uri(message.ServiceUrl));
+
+                    foreach (var member in iConversationUpdated.MembersAdded ?? System.Array.Empty<ChannelAccount>())
+                    {
+                        if (member.Id == iConversationUpdated.Recipient.Id)
+                        {
+                            //for json
+                            //var cardText = await CardHelper.GetCardText("tech-stack");
+                            //var reply = RootDialog.GetCardReply(message, cardText);
+                            //await connector.Conversations.ReplyToActivityAsync(reply);
+                            
+                            // show card
+                            //var message = context.MakeMessage();
+                            //message.Attachments.Add(OverviewCard.Overview());
+
+                            //await context.PostAsync(message, CancellationToken.None);
+
+                            if (message.MembersAdded.Any(o => o.Id == message.Recipient.Id))
+                            {
+                                var reply = message.CreateReply();
+                                reply.Attachments.Add(WelcomeCard.Welcome());
+                                connector.Conversations.ReplyToActivityAsync(reply);
+                            }
+                        }
+                    }
+                }
             }
             else if (messageType == ActivityTypes.ContactRelationUpdate)
             {

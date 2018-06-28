@@ -110,9 +110,9 @@ C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\ko\System.Spatial.res
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\ru\System.Spatial.resources.dll
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csprojAssemblyReference.cache
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csproj.CoreCompileInputs.cache
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csproj.CopyComplete
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.dll
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.pdb
 C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\bin\AdaptiveCards.dll
+C:\Users\BCS Employee\Documents\Repo\SuperBot\SuperBot\obj\Debug\SuperBot.csprojAssemblyReference.cache

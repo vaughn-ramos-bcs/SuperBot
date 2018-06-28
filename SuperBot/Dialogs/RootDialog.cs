@@ -4,7 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using SuperBot.Cards;
 using SuperBot.Cards.OnboardMe;
+using SuperBot.Models;
+using SuperBot.Services;
 
 namespace SuperBot.Dialogs
 {
@@ -18,102 +21,84 @@ namespace SuperBot.Dialogs
             return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        public async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var activity = await result as Activity;
+            var activity = await result as Activity;            
+            var message = activity.Text.ToString().ToLower();
 
-            var message = await result;
-            if (activity.Text != null)
-                PromptDialog.Choice(context, ShowProcessAsync, new List<string>() { "Onboard Me", "Ask HR", "Contact IT", "File Leave", "Get Payroll" }, "Hi, I am Super Bot!");
-
-        }
-        private async Task ShowProcessAsync(IDialogContext context, IAwaitable<string> result)
-        {
-            var res = Convert.ToString(await result);
-            if (res.ToLower() == "onboard me")
+            if (message != null)
             {
-                PromptDialog.Confirm(context, ConfirmAsync, "Are you deployed to a project?");
+                try
+                {
+                    #region alternative
+                    //await DialogHelper.Check(context, result);
+                    //switch (message)
+                    //{
+                    //    //case "ask hr":
+                    //    //case "contact it":
+                    //    //case "contact graphic team":
+                    //    //case "file leave":
+                    //    //case "get payslip":
+                    //    case "onboard me":
+                    //        await context.Forward(new OnboardMeDialog(), ResumeAfterModuleDialog, message, CancellationToken.None);
+                    //        return;
+
+                    //    default:
+                    //        await context.PostAsync("I didn't understand. Can you try again.");
+                    //        return;
+                    //}
+                    #endregion
+
+                    if (message.Contains("onboard me"))
+                    {
+                        await context.Forward(new OnboardMeDialog(), ResumeAfterModuleDialog, message, CancellationToken.None);
+                    }
+                    else if(message.Contains("restart") || message.Contains("stop") || message.Contains("go back") || message.Contains("options"))
+                    {
+                        var compose = context.MakeMessage();
+                        compose.Attachments.Add(WelcomeCard.Welcome());
+
+                        await context.PostAsync(compose, CancellationToken.None);
+                    }
+                    else
+                    {
+                        await context.PostAsync("I didn't understand. Can you try again.");
+                    }
+
+                }
+                catch(Exception ex)
+                {
+                    await context.PostAsync("Oops! Something went wrong. Please try again");
+                }
             }
-            else
-            {
-                await context.PostAsync("Not Implemented yet.");
-            }
-        }
-        private async Task ConfirmAsync(IDialogContext context, IAwaitable<bool> result)
-        {
-            var res = await result;
-            if (res is true)
-            {
-                var message = context.MakeMessage();
-                message.Attachments.Add(OverviewCard.Overview());
 
-                await context.PostAsync(message, CancellationToken.None);
-
-                PromptDialog.Text(context, OverviewAsync, "Any question?");
-            }
-            else
-            {
-                await context.PostAsync("Please ask your manager. You may try again later.");
-            }
-        }
-
-        private async Task OverviewAsync(IDialogContext context, IAwaitable<string> result)
-        {
-
-            if (result != null || !string.IsNullOrWhiteSpace(result.ToString()))
-            {
-                var message = context.MakeMessage();
-                message.Attachments.Add(TechStackCard.TechStack());
-
-                await context.PostAsync(message, CancellationToken.None);
-                PromptDialog.Text(context, ArchitectureAsync, "Got it?");
-            }
-
-        }
-
-        private async Task ArchitectureAsync(IDialogContext context, IAwaitable<string> result)
-        {
-            if (result != null || !string.IsNullOrWhiteSpace(result.ToString()))
-            {
-                var message = context.MakeMessage();
-                message.Attachments.Add(ArchitectureCard.Architecture());
-
-                await context.PostAsync(message, CancellationToken.None);
-                PromptDialog.Text(context, ExpectationAsync, "Understand?");
-            }
+            return;
+                
         }
 
-        private async Task ExpectationAsync(IDialogContext context, IAwaitable<string> result)
+        private async Task ResumeAfterModuleDialog(IDialogContext context, IAwaitable<object> result)
         {
-            if (result != null || !string.IsNullOrWhiteSpace(result.ToString()))
-            {
-                var message = context.MakeMessage();
-                message.Attachments.Add(ExpectationCard.Expectation());
-
-                await context.PostAsync(message, CancellationToken.None);
-                PromptDialog.Text(context, SetupAsync, "Question?");
-            }
+            //context.Wait(MessageReceivedAsync);
+            await context.PostAsync("Leave your comments/suggestion to improve your experience!");
         }
-
-        private async Task SetupAsync(IDialogContext context, IAwaitable<string> result)
+        #region privates
+        //Adaptive card will be used instead of Prompt.Choice
+        private IEnumerable<string> GetModules()
         {
-            if (result != null || !string.IsNullOrWhiteSpace(result.ToString()))
+            var modules = new List<string>()
             {
-                var message = context.MakeMessage();
-                message.Attachments.Add(SetupCard.Setup());
+                "Ask HR",
+                "Contact IT",
+                "Contact Graphic Team",
+                "File Leave",
+                "Get Payslip",
+                "Onboard Me"
+            };
 
-                await context.PostAsync(message, CancellationToken.None);
-                PromptDialog.Text(context, LastAsync, "Any concern/help needed?");
-            }
+            return modules;
         }
+        #endregion
 
-        private async Task LastAsync(IDialogContext context, IAwaitable<string> result)
-        {
-            if (result != null || !string.IsNullOrWhiteSpace(result.ToString()))
-            {
-                await context.PostAsync("That's Great! \U0001F601 Congratulations and Welcome to Technology.");
-                await context.PostAsync("You may now tap your manager/lead for task assignment");
-            }
-        }
+       
     }
 }
